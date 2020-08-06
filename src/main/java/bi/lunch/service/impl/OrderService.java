@@ -3,11 +3,13 @@ package bi.lunch.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import bi.lunch.dao.IDAO;
 import bi.lunch.entity.Order;
 import bi.lunch.service.IOrderService;
 
+@Service	
 public class OrderService implements IOrderService {
 	@Autowired
 	IDAO<Order> dao;
