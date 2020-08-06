@@ -3,22 +3,24 @@ package bi.lunch.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
-
 /**
  * The persistent class for the lunch_menu database table.
  * 
  */
 @Entity
-@Table(name="lunch_menu")
-@NamedQuery(name="LunchMenu.findAll", query="SELECT l FROM LunchMenu l")
+@Table(name = "lunch_menu")
+@NamedQuery(name = "LunchMenu.findAll", query = "SELECT l FROM LunchMenu l")
 public class LunchMenu implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	private String description;
+
+	@Lob
+	private String metadata;
 
 	private String name;
 
@@ -41,6 +43,14 @@ public class LunchMenu implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getMetadata() {
+		return this.metadata;
+	}
+
+	public void setMetadata(String metadata) {
+		this.metadata = metadata;
 	}
 
 	public String getName() {
