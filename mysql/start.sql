@@ -5,14 +5,16 @@ grant all on bi_lunch.* to bi_lunch@'%';
 
 
 
-CREATE TABLE `bi_lunch`.`users` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `user_name` VARCHAR(50) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
-  `email` VARCHAR(50) NOT NULL,
-  `status` BIT NULL,
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(50) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `user_type` int(11) NOT NULL,
+  `status` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `username_UNIQUE` (`user_name` ASC));
+  UNIQUE KEY `username_UNIQUE` (`user_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
   
 CREATE TABLE `bi_lunch`.`orders` (
