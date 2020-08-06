@@ -36,7 +36,7 @@ public class UserController {
 		return true;
 	}
 
-	private void insertMessageToClient(Map<Object, Object> result, String[] message) {
+	private void insertMessageToClient(Map<Object, Object> result, Object[] message) {
 		result.put("status", message[0]);
 		result.put("message", message[1]);
 	}
