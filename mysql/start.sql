@@ -24,11 +24,11 @@ CREATE TABLE `bi_lunch`.`orders` (
   `user_id` INT NOT NULL,
   PRIMARY KEY (`order_id`));
   
-CREATE TABLE `bi_lunch`.`lunch_menu` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  `description` VARCHAR(200) NULL,
-  `price` INT NOT NULL,
-  PRIMARY KEY (`id`));
-
-
+CREATE TABLE `lunch_menu` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `price` int(11) NOT NULL,
+  `metadata` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
