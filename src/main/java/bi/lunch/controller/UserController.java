@@ -63,12 +63,17 @@ public class UserController {
 		if (user.getPassword().equals(user.getRePassword())) {
 			// Let's get userName from database
 			User oldUser = userService.getUserById(user.getId());
-			user.setUserName(oldUser.getUserName());
-			if (userService.update(user)) {
-				insertMessageToClient(result, UserCRUDConstants.USER_UPDATED_SUCCESSFULLY);
-				return ResponseEntity.ok(result);
+			if (oldUser != null) {
+				user.setUserName(oldUser.getUserName());
+				if (userService.update(user)) {
+					insertMessageToClient(result, UserCRUDConstants.USER_UPDATED_SUCCESSFULLY);
+					return ResponseEntity.ok(result);
+				} else {
+					insertMessageToClient(result, UserCRUDConstants.USER_UPDATED_FAIL);
+					return ResponseEntity.badRequest().body(result);
+				}
 			} else {
-				insertMessageToClient(result, UserCRUDConstants.USER_UPDATED_FAIL);
+				insertMessageToClient(result, UserCRUDConstants.USER_NOT_FOUND);
 				return ResponseEntity.badRequest().body(result);
 			}
 		} else {

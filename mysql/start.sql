@@ -4,6 +4,7 @@ create database bi_lunch charset='utf8' collate='utf8_general_ci';
 grant all on bi_lunch.* to bi_lunch@'%';
 
 
+USE bi_lunch;
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
