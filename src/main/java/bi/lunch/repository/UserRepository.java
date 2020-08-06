@@ -46,7 +46,7 @@ public class UserRepository implements IDAO<User> {
 	@Transactional
 	public boolean insert(User t) {
 		try {
-			getSession().save(t);
+			getSession().persist(t);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

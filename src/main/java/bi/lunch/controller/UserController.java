@@ -47,86 +47,49 @@ public class UserController {
 		return ResponseEntity.ok(result);
 	}
 
-	@PostMapping(value = "/user/get_user", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<Object, Object>> getUserById(@RequestBody Map<Object, Object> data) {
-		Map<Object, Object> result = new HashMap<>();
-		String[] requriedFields = new String[] { "userId" };
-		User user = null;
-		if (validateInput(requriedFields, data)) {
-			user = userService.getUserById(Integer.parseInt(data.get("userId").toString()));
-			if (user != null) {
-				result.put("user", user);
-			} else {
-				insertMessageToClient(result, UserCRUDConstants.USER_NOT_FOUND);
-			}
-			return ResponseEntity.ok(result);
-		} else {
-			insertMessageToClient(result, ResponseConstants.INVALID_INPUT);
-			return ResponseEntity.badRequest().body(result);
-		}
+	@PostMapping(value = "/user/get_user/{lkjj}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<Object, Object>> getUserById(@RequestBody User user) {
+		log.info(user.toString());
+		return null;
 	}
 
 	@PostMapping(value = "/user/edit_user", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<Object, Object>> editUser(@RequestBody Map<Object, Object> data) {
+	public ResponseEntity<Map<Object, Object>> editUser(@RequestBody User user) {
 		Map<Object, Object> result = new HashMap<>();
 		// We need to verify if user has permission to edit the user, if a super user is
 		// trying to edit the user, let him do it, otherwise, check it
 		// Let's assume that we are super user, the verification would be written later
 		// by TienLV since he has lots of knowledge about that
-
-		User user = null;
-		String[] requiredFields = new String[] { "userId", "password", "rePassword", "email", "userType", "status" };
-		if (validateInput(requiredFields, data)) {
-			if (data.get("password").toString().equals(data.get("rePassword").toString())) {
-				user = userService.getUserById(Integer.parseInt(data.get("userId").toString()));
-				user.setEmail(data.get("email").toString());
-				user.setPassword(data.get("password").toString());
-				user.setUserType(Integer.parseInt(data.get("userType").toString()));
-				user.setStatus((byte) Integer.parseInt(data.get("status").toString()));
-				if (userService.update(user)) {
-					insertMessageToClient(result, UserCRUDConstants.USER_UPDATED_SUCCESSFULLY);
-					result.put("user", user);
-					return ResponseEntity.ok(result);
-				} else {
-					insertMessageToClient(result, UserCRUDConstants.USER_UPDATED_FAIL);
-					return ResponseEntity.badRequest().body(result);
-				}
+		if (user.getPassword().equals(user.getRePassword())) {
+			// Let's get userName from database
+			User oldUser = userService.getUserById(user.getId());
+			user.setUserName(oldUser.getUserName());
+			if (userService.update(user)) {
+				insertMessageToClient(result, UserCRUDConstants.USER_UPDATED_SUCCESSFULLY);
+				return ResponseEntity.ok(result);
 			} else {
-				insertMessageToClient(result, UserCRUDConstants.PASSWORD_DOES_NOT_MATCH);
+				insertMessageToClient(result, UserCRUDConstants.USER_UPDATED_FAIL);
 				return ResponseEntity.badRequest().body(result);
 			}
 		} else {
-			insertMessageToClient(result, ResponseConstants.INVALID_INPUT);
+			insertMessageToClient(result, UserCRUDConstants.PASSWORD_DOES_NOT_MATCH);
 			return ResponseEntity.badRequest().body(result);
 		}
 	}
 
 	@PostMapping(value = "/user/add_user", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<Object, Object>> createUser(@RequestBody Map<Object, Object> data) {
-		log.info("User request " + data);
+	public ResponseEntity<Map<Object, Object>> createUser(@RequestBody User user) {
 		Map<Object, Object> result = new HashMap<>();
-		String[] requiredFields = new String[] { "userName", "password", "rePassword", "email" };
-		if (validateInput(requiredFields, data)) {
-			if (data.get("password").toString().equals(data.get("rePassword").toString())) {
-				User user = new User();
-				user.setUserName(data.get("userName").toString());
-				user.setPassword(data.get("password").toString());
-				user.setEmail(data.get("email").toString());
-				if (userService.insert(user)) {
-					log.info(String.format("User %s added successfully", user.toString()));
-					insertMessageToClient(result, UserCRUDConstants.REGISTERED_SUCCESSFULLY);
-					return ResponseEntity.ok(result);
-				} else {
-					log.info(String.format("User %s added failed", user.toString()));
-					insertMessageToClient(result, UserCRUDConstants.ERROR_HAPPENED);
-					return ResponseEntity.unprocessableEntity().body(result);
-				}
+		if (user.getPassword().equals(user.getRePassword())) {
+			if (userService.insert(user)) {
+				insertMessageToClient(result, UserCRUDConstants.REGISTERED_SUCCESSFULLY);
+				return ResponseEntity.ok(result);
 			} else {
-				insertMessageToClient(result, UserCRUDConstants.PASSWORD_DOES_NOT_MATCH);
+				insertMessageToClient(result, UserCRUDConstants.ERROR_HAPPENED);
 				return ResponseEntity.badRequest().body(result);
 			}
 		} else {
-			insertMessageToClient(result, ResponseConstants.INVALID_INPUT);
+			insertMessageToClient(result, UserCRUDConstants.PASSWORD_DOES_NOT_MATCH);
 			return ResponseEntity.badRequest().body(result);
 		}
 	}

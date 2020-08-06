@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.sun.istack.NotNull;
 
 import bi.lunch.constant.UserConstants;
 
@@ -26,15 +29,23 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	@NotNull
 	private String email;
 
+	@NotNull
 	private String password;
+
+	@NotNull
+	@Transient
+	private String rePassword;
 
 	private byte status;
 
+	@NotNull
 	@Column(name = "user_name")
 	private String userName;
 
+	@NotNull
 	@Column(name = "user_type")
 	private int userType;
 
@@ -67,6 +78,14 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
+	public String getRePassword() {
+		return rePassword;
+	}
+
+	public void setRePassword(String rePassword) {
+		this.rePassword = rePassword;
+	}
+
 	public Object getStatus() {
 		return this.status;
 	}
@@ -89,6 +108,12 @@ public class User implements Serializable {
 
 	public void setUserType(int userType) {
 		this.userType = userType;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Username: %s - Password: %s - Email: %s - User Type: %s", userName, password, email,
+				userType);
 	}
 
 }
