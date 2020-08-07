@@ -1,16 +1,20 @@
 package bi.lunch.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 import bi.lunch.constant.UserConstants;
@@ -37,6 +41,7 @@ public class User implements Serializable {
 
 	@NotNull
 	@Transient
+	@JsonIgnore
 	private String rePassword;
 
 	private byte status;
@@ -48,6 +53,9 @@ public class User implements Serializable {
 	@NotNull
 	@Column(name = "user_type")
 	private int userType;
+
+	@OneToMany(mappedBy = "userByUserIdFromOrder", fetch = FetchType.EAGER)
+	private Set<Order> ordersByUserId;
 
 	public User() {
 		this.userType = UserConstants.NORMAL_USER;
@@ -108,6 +116,14 @@ public class User implements Serializable {
 
 	public void setUserType(int userType) {
 		this.userType = userType;
+	}
+
+	public Set<Order> getOrdersByUserId() {
+		return ordersByUserId;
+	}
+
+	public void setOrdersByUserId(Set<Order> ordersByUserId) {
+		this.ordersByUserId = ordersByUserId;
 	}
 
 	@Override
